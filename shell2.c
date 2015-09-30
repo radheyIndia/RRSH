@@ -28,13 +28,11 @@ int main(int argc, char *argv[])
 		printf("Error in command.\n");
 	}
 	else{
-//		printf("No error in command.\n");
 		/*Check for internal or external*/
 		ie_flag = check_for_ie(cmd);
 		/*Take action*/	
 		if(ie_flag==1){
 			/*Call procedure*/
-//			printf("Internal command.\n");
 			if(strcmp(cmd,"exit")==0){
 				rshell_exit();
 			}
@@ -52,7 +50,6 @@ int main(int argc, char *argv[])
 			else{
 				waitpid(childid);
 			}
-			//printf("External command.\n");
 		}
 	}
 }
@@ -60,12 +57,9 @@ int main(int argc, char *argv[])
 }
 
 int check_for_error(char *cmd)
-{
-	
+{	
 	if(strlen(cmd)>256)
-	{
 		return 1;
-	}
 	return 0;
 }
 

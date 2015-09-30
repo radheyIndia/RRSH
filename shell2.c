@@ -1,80 +1,90 @@
 #include<stdio.h>
+#include<stdlib.h>
 #include<unistd.h>
 #include<string.h>
 
 
-int error_flag=0, ie_flag=0;
 
 /*Function Prototypes*/
-char *get_command(void);
 int check_for_error(char*);
 int check_for_ie(char*);
+void rshell_exit(void);
 
 /*Main Module*/
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
 	/* Data Declaration */
 	char cmd[256];
-	
+	int error_flag=0, ie_flag=0;
+	while(1){
 	/*Get command from user*/
-	cmd = get_command();
+	printf("radhey@Ubuntu:~");
+	scanf("%s",cmd);
 
 	/*Validiate command*/
 	error_flag = check_for_error(cmd);
-	if(error_flag==0)
+	if(error_flag==1)
 	{
-		printf("Error.\n");
+		printf("Error in command.\n");
 	}
 	else{
+//		printf("No error in command.\n");
 		/*Check for internal or external*/
 		ie_flag = check_for_ie(cmd);
-		/*
-			ie_flag=1 ==> internal
-			ie_flag=0 ==> external
-		*/
 		/*Take action*/	
 		if(ie_flag==1){
 			/*Call procedure*/
+//			printf("Internal command.\n");
+			if(strcmp(cmd,"exit")==0){
+				rshell_exit();
+			}
+			if (strcmp(cmd,"cd")==0)
+			{
+				printf("Command not yet ready.\n");
+			}
 		}	
 		else{
-			/*
-			Fork
-			Exec
-			*/
+			int childid = fork();
+			if (childid==0)
+			{
+				execlp(cmd,"",NULL);
+			}
+			else{
+				waitpid(childid);
+			}
+			//printf("External command.\n");
 		}
 	}
-
-	return 0;
 }
-
-char *get_command(void)
-{
-	printf("Enter the command:-");
-	scanf("%s",cmd);
+	return 0;
 }
 
 int check_for_error(char *cmd)
 {
-	if(strlen(cmd)<256)
+	
+	if(strlen(cmd)>256)
 	{
-		error_flag=1;
+		return 1;
 	}
-	return 1;
+	return 0;
 }
 
 int check_for_ie(char *cmd)
-{		
-	FILE *fp;
-	fp=fopen("internal_command.txt","r");
-		int result=access(argv[1],F_OK);
-		while(!feof(fp))
+{	
+	int i;
+	char *list[2]={"exit","cd"};
+	for (i = 0; i < 2; ++i)
+	{
+		if (strcmp(list[i],cmd)==0)
 		{
-			if(result==0)
-			{
-				ie_flag=1;
-			}
-			
+			return 1;
 		}
-	fclose(fp);	
+	}
+	return 0;
 
+}
+
+void rshell_exit(){
+	printf("Bye.\n\n");
+	exit(0);
 }

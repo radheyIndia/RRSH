@@ -14,7 +14,7 @@ int rshell_history(parseInfo *info){}
 int rshell_jobs(parseInfo *info){}
 
 int rshell_exit(parseInfo *info){
-	printf("Initializing the shell termination...\n");
+	printf("Initializing shell termination...\n");
 	//free_info(info);
 	printf("Shell Terminated.\n\n");
 	exit(0);
@@ -32,7 +32,12 @@ int rshell_help(parseInfo *info){
 
 }
 
-int rshell_which(parseInfo *info){}
+int rshell_which(parseInfo *info){
+	printf("We are in\n");
+	if (info->CommArray[0].VarNum > 0){
+		printf("%s\n", getenv(info->CommArray[0].VarList[0]));
+	}
+}
 int rshell_pushd(parseInfo *info){}
 int rshell_popd(parseInfo *info){}
 int rshell_alias(parseInfo *info){}

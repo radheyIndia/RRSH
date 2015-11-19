@@ -78,6 +78,25 @@ int executeBuiltInCommand(parseInfo *info, int builtInCommandId){
 /*Execute Command*/
 int executeCommand(parseInfo *info){
 	int childStatus;
+    FILE *fp;
+    if(info->boolInfile == 1){
+    	fp = fopen(info->inFile, "r");
+    	if(fp){
+    		dup2(fileno(fp), 0);
+    	}
+    	else{
+    		printf("InFile: %s not found.\n", info->inFile);
+    	}
+    }
+    if(info->boolOutfile == 1){
+    	fp = fopen(info->outFile, "w");
+    	if(fp){
+    		dup2(fileno(fp), 1);
+    	}
+    	else{
+    		printf("OutFile: %s not found.\n", info->outFile);
+    	}    	
+    }
     switch(info->CommArray[0].VarNum){
     	case 0: childStatus = execlp(info->CommArray[0].command, "", NULL);
        			break;
@@ -87,10 +106,13 @@ int executeCommand(parseInfo *info){
        			break;
        	case 3: childStatus = execlp(info->CommArray[0].command, info->CommArray[0].command, info->CommArray[0].VarList[0], info->CommArray[0].VarList[1], info->CommArray[0].VarList[2], NULL);
        			break;
+       	case 4: childStatus = execlp(info->CommArray[0].command, info->CommArray[0].command, info->CommArray[0].VarList[0], info->CommArray[0].VarList[1], info->CommArray[0].VarList[2], info->CommArray[0].VarList[3], NULL);
+       			break;
+       	case 5: childStatus = execlp(info->CommArray[0].command, info->CommArray[0].command, info->CommArray[0].VarList[0], info->CommArray[0].VarList[1], info->CommArray[0].VarList[2], info->CommArray[0].VarList[3], info->CommArray[0].VarList[4], NULL);
+       			break;
        	default: printf("Number of arguments exceeds the limit.\n");
     }
-    if (childStatus == -1)
-    {
+    if (childStatus == -1){
     	printf("Command not found.\n");
        	exit(0);
     }
@@ -113,7 +135,7 @@ char *printPrompt(){
 
 int main(int argc, char **argv) {
 	char *cmdLine, *host;
-	int childPid, builtInCommandId;
+	int childPid, builtInCommandId, parsingStatus;
 	parseInfo *info;
 	struct passwd *passwd;
 	uid_t uid;
@@ -146,7 +168,11 @@ int main(int argc, char **argv) {
        	if(cmdLine && *cmdLine)
        		add_history(cmdLine);
 	   	scan_string(cmdLine);
-	   	yyparse();
+	   	parsingStatus = yyparse();
+	   	/*Parsing Failed*/
+	   	if(parsingStatus != 0){
+	   		continue;
+	   	}
 	   	info = pInfo;
        	
        	builtInCommandId = isBuiltInCommand(info);

@@ -15,6 +15,6 @@ typedef struct {
   int   boolBackground;		       /* run the process in the background? */
   struct commandType CommArray[PIPE_MAX_NUM];
   int   pipeNum;
-  char  inFile[FILE_MAX_SIZE];	       /* file to be piped from */
-  char  outFile[FILE_MAX_SIZE];	       /* file to be piped into */
+  char  *inFile;	       /* file to be piped from */
+  char  *outFile;	       /* file to be piped into */
 } parseInfo;

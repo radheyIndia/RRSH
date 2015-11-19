@@ -15,12 +15,14 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-#include "parser.c"
+#include "lex.yy.c"
+#include "y.tab.c"
 #include "internal_commands.c"
 //#include "helper.c"
 
 char *builtInCommands[] = {"cd","history","jobs","exit","kill","help","which","pushd","popd","alias","fg","bg","printenv","setenv"};
 /*Check for internal commands*/
+
 int isBuiltInCommand(parseInfo *info){
 	char *temp = builtInCommands[0];
 	int i=0;
@@ -129,36 +131,41 @@ int main(int argc, char **argv) {
 	printf("\n\n************Welcome to RSHELL***********\n\n");
 	printf("User: %s\nHost: %s\n\n",passwd->pw_name,host);
 
-    while(1) {
-    	if (cmdLine)
+    while(1){
+    	if (pInfo)
     	{
+    		free(pInfo);
+    		pInfo = (parseInfo *)NULL;
+    	}
+    	pInfo = (parseInfo *)malloc(sizeof(parseInfo));
+    	if(cmdLine){
     		free(cmdLine);
     		cmdLine = (char *)NULL;
     	}
-       cmdLine = readline(printPrompt());
-       if(cmdLine && *cmdLine)
-	       add_history(cmdLine);
-       info  = parse(cmdLine);
-       //record command in history list (GNU readline history ?)
-       builtInCommandId = isBuiltInCommand(info);
-       if(builtInCommandId != -1){
-       	executeBuiltInCommand(info, builtInCommandId);
-       }
-       else{
-       	childPid = fork();
-       	if (childPid == 0){
-       		executeCommand(info); //calls execvp 
-		}
-		else{
-			if(isBackgroundJob(info)){
-				//record in list of background jobs
+    	cmdLine = readline(printPrompt());
+       	if(cmdLine && *cmdLine)
+       		add_history(cmdLine);
+	   	scan_string(cmdLine);
+	   	yyparse();
+	   	info = pInfo;
+       	
+       	builtInCommandId = isBuiltInCommand(info);
+       	if(builtInCommandId != -1){
+       		executeBuiltInCommand(info, builtInCommandId);
+       	}
+       	else{
+	       	childPid = fork();
+    	   	if (childPid == 0){
+       			executeCommand(info); //calls execvp 
 			}
 			else{
-				wait();
+				if(isBackgroundJob(info)){
+					//record in list of background jobs
+				}
+				else{
+					wait();
+				}
 			}
-		}
-	   }
-  //     print_info(info);
+	   	}
     }
-    free_info(info);
 }

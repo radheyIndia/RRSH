@@ -15,7 +15,7 @@ int rshell_jobs(parseInfo *info){}
 
 int rshell_exit(parseInfo *info){
 	printf("Initializing the shell termination...\n");
-	free_info(info);
+	//free_info(info);
 	printf("Shell Terminated.\n\n");
 	exit(0);
 }

@@ -11,3 +11,15 @@ A Basic Linux Shell Implementation
 - Up and down arrows to scroll through the history  [GNU Readline Library]
 - Parsing using LEX and YACC tools    [FLEX & BISON]
 - I/O Redirection
+
+<b>Requirements</b>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sudo apt-get install flex
+sudo apt-get install bison
+sudo apt-get install libreadline6 libreadline6-dev
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+<b>How to compile</b>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+gcc shell.c -o rshell -lreadline
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

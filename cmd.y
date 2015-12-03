@@ -4,12 +4,14 @@
 parseInfo *pInfo;
 int i=0;
 
-void yyerror(const char *str){fprintf(stderr, "Error: %s\n", str);}
+/*Handle Errors*/
+void yyerror(const char *str){}
+
 
 int yywrap(){return 1;}
 %}
 
-%token _SPACE _DELIM RIO LIO PIPE
+%token _SPACE _DELIM RIO LIO PIPE BG
 
 %union{	int number; char *string;}
 
@@ -30,9 +32,19 @@ commands: command{
 	| commands _DELIM command{return 0;};
 command: CMD{
 			pInfo->CommArray[0].command = strdup($1);
+			pInfo->boolBackground = 0;
+			}
+	| CMD _SPACE BG{
+			pInfo->CommArray[0].command = strdup($1);
+			pInfo->boolBackground = 1;
 			}
 	| CMD _SPACE args{
 			pInfo->CommArray[0].command = strdup($1);
+			pInfo->boolBackground = 0;
+			} 
+	| CMD _SPACE args _SPACE BG{
+			pInfo->CommArray[0].command = strdup($1);
+			pInfo->boolBackground = 1;
 			} 
 	| CMD _SPACE io _SPACE arg{
 			pInfo->CommArray[0].command = strdup($1);
@@ -40,6 +52,15 @@ command: CMD{
 				pInfo->inFile = strdup($5);
 			else
 				pInfo->outFile = strdup($5);
+			pInfo->boolBackground = 0;
+			}
+	| CMD _SPACE io _SPACE arg _SPACE BG{
+			pInfo->CommArray[0].command = strdup($1);
+			if(pInfo->boolInfile)
+				pInfo->inFile = strdup($5);
+			else
+				pInfo->outFile = strdup($5);
+			pInfo->boolBackground = 1;
 			};
 args: args _SPACE arg{
 			pInfo->CommArray[0].VarList[i++] = strdup($1);

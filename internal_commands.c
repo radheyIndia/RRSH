@@ -10,8 +10,40 @@ int rshell_cd(parseInfo *info){
 		printf("Error: Invalid directory name.\n");
 }
 
-int rshell_history(parseInfo *info){}
-int rshell_jobs(parseInfo *info){}
+int rshell_history(parseInfo *info){
+	FILE *fp;
+	int num,total,i=0;
+	char cmd[100];
+	fp = fopen("command_history.txt","r");
+	if(fscanf(fp, "%d", &total) > 0){
+		while(i<total){
+			fgets(cmd, 100, fp);
+			printf("%s", cmd);
+			i++;
+		}
+		printf("\n%d commands\n",total-1);
+	}
+	fclose(fp);
+}
+int rshell_jobs(parseInfo *info){
+	int i=0;
+	int status, result;
+	if(bg_jobs_count == 0){
+		return 0;
+	}
+	else{
+		while(i<bg_jobs_count){
+			result = waitpid(background_jobs[i].pid, &status, WNOHANG);
+			if(result == -1){
+				printf("Error in getting status.\n");
+			}else if(result == 0){
+				printf("%d\n", background_jobs[i].pid);
+			}else if(result == background_jobs[i].pid){
+				printf("Finished\n");
+			}
+		}
+	}
+}
 
 int rshell_exit(parseInfo *info){
 	printf("Initializing shell termination...\n");

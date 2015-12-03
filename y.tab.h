@@ -50,8 +50,9 @@ extern int yydebug;
     RIO = 260,
     LIO = 261,
     PIPE = 262,
-    CMD = 263,
-    ARG = 264
+    BG = 263,
+    CMD = 264,
+    ARG = 265
   };
 #endif
 /* Tokens.  */
@@ -60,21 +61,19 @@ extern int yydebug;
 #define RIO 260
 #define LIO 261
 #define PIPE 262
-#define CMD 263
-#define ARG 264
+#define BG 263
+#define CMD 264
+#define ARG 265
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 14 "cmd.y" /* yacc.c:1909  */
-	
-	int number;
-	char *string;
-	
+#line 16 "cmd.y" /* yacc.c:1909  */
+	int number; char *string;
 
-#line 78 "y.tab.h" /* yacc.c:1909  */
+#line 77 "y.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

@@ -12,6 +12,7 @@ ARG2		[\"|\'][\-\/%_.$!@#^& a-zA-z0-9]+[\"|\']
 [>]				{return RIO;}
 [<]				{return LIO;}
 [|]				{return PIPE;}
+[&] 			{return BG;}
 {CMD1}			{yylval.string = strdup(yytext); return CMD;}
 {CMD2}			{yylval.string = strdup(yytext); return CMD;}
 {ARG1}			{yylval.string = strdup(yytext); return ARG;}

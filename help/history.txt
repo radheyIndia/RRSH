@@ -1,0 +1,7 @@
+history
+	- shows a list of previously used commands
+
+Syntax: history [option]
+
+Options:
+	-t	Show timestamp with commands

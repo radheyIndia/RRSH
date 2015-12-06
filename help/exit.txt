@@ -1,0 +1,5 @@
+exit
+	- initiates the shell process termination
+
+Syntax: exit
+

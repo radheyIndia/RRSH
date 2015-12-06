@@ -1,0 +1,9 @@
+RSHELL HELP INDEX
+
+Command		Syntax			Description
+-------		------			-----------
+cd		cd <directory>		To change the current directory
+history		history	[option] 	To view a list of previously used commands
+jobs		jobs			To view a list of active jobs
+exit		exit			To  exit the shell
+

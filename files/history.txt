@@ -1,0 +1,15 @@
+ls 
+ Sun Dec  6 10:58:20 2015
+ 
+ps 
+ Sun Dec  6 10:58:21 2015
+ 
+history 
+ Sun Dec  6 10:58:25 2015
+ 
+history -t 
+ Sun Dec  6 10:58:29 2015
+ 
+exit 
+ Sun Dec  6 10:58:33 2015
+ 

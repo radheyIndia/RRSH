@@ -65,7 +65,6 @@ void init(){
 		exit(EXIT_FAILURE);
 	}
 }
-
 void welcomeScreen(){
 	char *host;
 	struct passwd *passwd;

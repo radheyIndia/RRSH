@@ -15,11 +15,27 @@ int rshell_history(parseInfo *info){
 	char *cmd = NULL;
 	int i=0;
 	list = history_list();
-	
-	if(list){
-		while(list[i]){
-			printf("%s \t %s \n", list[i]->timestamp, list[i]->line);
-			i++;
+
+	if(info->CommArray[0].VarNum == 0){
+		//No flags
+		if(list){
+			while(list[i]){
+				printf("%s \n", list[i]->line);
+				i++;
+			}
+		}
+	}
+	else{
+		if(strcmp(info->CommArray[0].VarList[0], "-t") == 0){
+			if(list){
+				while(list[i]){
+					printf("%s \t %s \n", list[i]->line, list[i]->timestamp);
+					i++;
+				}
+			}
+		}
+		else{
+			printf("Invalid option. Please type \n help history \n to see more options.\n");
 		}
 	}
 }
@@ -45,8 +61,25 @@ int rshell_jobs(parseInfo *info){
 }
 
 int rshell_exit(parseInfo *info){
-	printf("Initializing shell termination...\n");
-	//free_info(info);
+	HIST_ENTRY **list = NULL;
+	FILE *fp;
+	int i=0;
+	
+	printf("Initializing shell termination...\n");	
+	list = history_list();
+	if(list){
+		fp = fopen("files/history.txt","a");
+		if(!fp){
+			printf("Error in saving command history.\n");
+		}
+		else{
+			while(list[i]){
+				fprintf(fp,"%s \n %s \n", list[i]->line, list[i]->timestamp);
+				i++;
+			}
+			fclose(fp);
+		}
+	}
 	printf("Shell Terminated.\n\n");
 	exit(0);
 }
@@ -54,13 +87,41 @@ int rshell_exit(parseInfo *info){
 int rshell_kill(parseInfo *info){}
 
 int rshell_help(parseInfo *info){
-	printf("RSHELL HELP INDEX\n");
-	printf("Command\t\tSyntax\t\tDescription\n");
-	printf("cd\t| cd <directory>\t| To change the current directory\n");
-	printf("history\t| history\t| To view a list of previously used commands\n");
-	printf("jobs\t| cd jobs\t| To view a list of active jobs\n");
-	printf("exit\t| cd exit\t| To  exit the shell\n");
-
+	FILE *fp;
+	char ch;
+	char *file_name;
+	if(info->CommArray[0].VarNum == 0){
+		//No flags
+		fp = fopen("help/help_index.txt","r");
+		if(!fp){
+			printf("No help index found.\n");
+		}
+		else{
+			ch = fgetc(fp);
+			while(ch != EOF){
+				printf("%c", ch);
+				ch = fgetc(fp);
+			}
+			fclose(fp);
+		}
+	}
+	else{
+		file_name = (char *)malloc(20);
+		sprintf(file_name, "help/%s.txt",info->CommArray[0].VarList[0]);
+		fp = fopen(file_name, "r");
+		if(!fp){
+			printf("No help file found.\n");
+		}
+		else{
+			ch = fgetc(fp);
+			while(ch != EOF){
+				printf("%c", ch);
+				ch = fgetc(fp);
+			}
+			fclose(fp);
+		}
+		free(file_name);
+	}
 }
 
 int rshell_which(parseInfo *info){

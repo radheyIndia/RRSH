@@ -1,0 +1,14 @@
+cd
+	- change the current working directory to the specified directory
+
+Syntax: cd [directory]
+
+directory:
+	.	current directory
+	..	previous directory
+	[dir]	any other directory
+
+Example:
+cd ..
+cd xyz
+cd /home/Downloads

@@ -1,0 +1,9 @@
+help
+	- shows a list of available commands
+
+Syntax: help [command]
+
+command:
+	type 
+	help [command name]
+	to get more information about specified command

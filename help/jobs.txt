@@ -1,0 +1,5 @@
+jobs
+	- shows a list of active background processes
+
+Syntax: jobs
+

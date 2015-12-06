@@ -111,35 +111,6 @@ char *printPrompt(){
 	return prompt;
 }
 
-/*Record Command History*/
-int recordHistory(char *cmdLine){
-	FILE *fp,*fp1;
-	int command_count;
-	fp = fopen("command_history.txt","a+");
-	if (!fp)
-	{
-		printf("Error in recording command history.\n");
-		return 0;
-	}
-	else{
-		if(fscanf(fp,"%d",&command_count) > 0){
-			command_count++;
-			fprintf(fp, "%d %s\n", command_count, cmdLine);
-			fclose(fp);
-			fp1 = fopen("command_history.txt","r+");
-			fprintf(fp1, "%d\n", command_count);
-			fclose(fp1);
-		}
-		else{
-			command_count = 1;
-			fprintf(fp, "%d\n", command_count);
-			fprintf(fp, "%d %s\n", command_count, cmdLine);
-			fclose(fp);
-		}
-
-	}
-}
-
 int addBgProcess(int childPid, char *cmdLine){
 	background_jobs[bg_jobs_count].pid = childPid;	
 	background_jobs[bg_jobs_count].pname = strdup(cmdLine);

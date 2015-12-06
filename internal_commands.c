@@ -11,20 +11,19 @@ int rshell_cd(parseInfo *info){
 }
 
 int rshell_history(parseInfo *info){
-	FILE *fp;
-	int num,total,i=0;
-	char cmd[100];
-	fp = fopen("command_history.txt","r");
-	if(fscanf(fp, "%d", &total) > 0){
-		while(i<total){
-			fgets(cmd, 100, fp);
-			printf("%s", cmd);
+	HIST_ENTRY **list = NULL;
+	char *cmd = NULL;
+	int i=0;
+	list = history_list();
+	
+	if(list){
+		while(list[i]){
+			printf("%s \t %s \n", list[i]->timestamp, list[i]->line);
 			i++;
 		}
-		printf("\n%d commands\n",total-1);
 	}
-	fclose(fp);
 }
+
 int rshell_jobs(parseInfo *info){
 	int i=0;
 	int status, result;
